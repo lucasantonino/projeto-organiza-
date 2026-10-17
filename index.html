@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f6f7fb" />
+    <title>Organizaê — organize seus estudos</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <script src="script.js" defer></script>
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar" aria-label="Navegação principal">
+        <a class="brand" href="#overview" aria-label="Organizaê, visão geral"
+          ><span class="brand-mark" aria-hidden="true"
+            ><i></i><i></i><i></i></span
+          ><span>Organiza<span class="brand-accent">ê</span></span></a
+        >
+        <p class="nav-caption">MENU</p>
+        <nav class="nav-list">
+          <button class="nav-item active" data-view="overview">
+            <span class="nav-icon" aria-hidden="true">⌂</span>Visão geral
+          </button>
+          <button class="nav-item" data-view="tasks">
+            <span class="nav-icon" aria-hidden="true">▤</span>Minhas
+            tarefas<span class="nav-count" id="nav-pending">0</span>
+          </button>
+          <button class="nav-item" data-view="completed">
+            <span class="nav-icon" aria-hidden="true">✓</span>Concluídas<span
+              class="nav-count"
+              id="nav-completed"
+              >0</span
+            >
+          </button>
+        </nav>
+        <div class="sidebar-footer">
+          <span class="footer-dot"></span>Seu espaço de estudos
+        </div>
+      </aside>
+
+      <main class="main-area">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow" id="today-label">SEU PLANEJAMENTO</p>
+            <h1 id="greeting">Olá! Vamos organizar seus estudos?</h1>
+            <p class="date-line" id="current-date"></p>
+          </div>
+          <button class="button button-primary" id="new-task">
+            <span aria-hidden="true">＋</span> Nova tarefa
+          </button>
+        </header>
+
+        <section class="stats-grid" aria-label="Resumo das tarefas">
+          <article class="stat-card">
+            <div class="stat-top">
+              <span>Total de tarefas</span
+              ><span class="stat-icon purple" aria-hidden="true">▤</span>
+            </div>
+            <strong id="stat-total">0</strong><small>no seu planejamento</small>
+          </article>
+          <article class="stat-card">
+            <div class="stat-top">
+              <span>Pendentes</span
+              ><span class="stat-icon amber" aria-hidden="true">◷</span>
+            </div>
+            <strong id="stat-pending">0</strong><small>aguardando você</small>
+          </article>
+          <article class="stat-card">
+            <div class="stat-top">
+              <span>Concluídas</span
+              ><span class="stat-icon green" aria-hidden="true">✓</span>
+            </div>
+            <strong id="stat-completed">0</strong><small>bom trabalho!</small>
+          </article>
+          <article class="stat-card">
+            <div class="stat-top">
+              <span>Prazo vencido</span
+              ><span class="stat-icon red" aria-hidden="true">!</span>
+            </div>
+            <strong id="stat-overdue">0</strong
+            ><small>precisam de atenção</small>
+          </article>
+        </section>
+
+        <section class="tasks-section" aria-labelledby="list-heading">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow" id="section-kicker">ACOMPANHE SEU RITMO</p>
+              <h2 id="list-heading">Suas tarefas</h2>
+              <p class="section-subtitle" id="list-subtitle">
+                Tudo o que você precisa fazer, em um só lugar.
+              </p>
+            </div>
+            <span class="task-total" id="visible-count">0 tarefas</span>
+          </div>
+          <div class="toolbar">
+            <label class="search-box"
+              ><span aria-hidden="true">⌕</span
+              ><input
+                id="search-input"
+                type="search"
+                placeholder="Buscar tarefa..."
+                aria-label="Buscar por tarefa ou matéria"
+            /></label>
+            <label class="visually-hidden" for="subject-filter"
+              >Filtrar por matéria</label
+            ><select id="subject-filter">
+              <option value="">Todas as matérias</option>
+            </select>
+            <label class="visually-hidden" for="priority-filter"
+              >Filtrar por prioridade</label
+            ><select id="priority-filter">
+              <option value="">Todas as prioridades</option>
+              <option value="Alta">Alta</option>
+              <option value="Média">Média</option>
+              <option value="Baixa">Baixa</option>
+            </select>
+            <label class="visually-hidden" for="status-filter"
+              >Filtrar por status</label
+            ><select id="status-filter">
+              <option value="">Todos os status</option>
+              <option value="pending">Pendentes</option>
+              <option value="completed">Concluídas</option>
+              <option value="overdue">Atrasadas</option>
+            </select>
+            <button class="clear-filters" id="clear-filters" hidden>
+              Limpar filtros
+            </button>
+          </div>
+          <div class="task-list" id="task-list" aria-live="polite"></div>
+        </section>
+        <footer class="page-footer">
+          Um passo de cada vez. Você está no caminho certo.
+          <span>Organizaê</span>
+        </footer>
+      </main>
+    </div>
+
+    <dialog class="task-dialog" id="task-dialog" aria-labelledby="dialog-title">
+      <form id="task-form" novalidate>
+        <div class="dialog-heading">
+          <div>
+            <p class="eyebrow">PLANEJE COM CALMA</p>
+            <h2 id="dialog-title">Nova tarefa</h2>
+            <p class="dialog-subtitle">
+              Organize os detalhes da sua atividade.
+            </p>
+          </div>
+          <button
+            type="button"
+            class="icon-button"
+            id="close-dialog"
+            aria-label="Fechar"
+          >
+            ×
+          </button>
+        </div>
+        <input type="hidden" id="task-id" />
+        <div class="field">
+          <label for="task-title">Título da tarefa <span>*</span></label
+          ><input
+            id="task-title"
+            name="title"
+            maxlength="100"
+            autocomplete="off"
+            placeholder="Ex.: Entregar atividade de Engenharia de Software"
+            aria-describedby="title-error"
+          /><small class="field-error" id="title-error"></small>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="task-subject">Matéria <span>*</span></label
+            ><select id="task-subject" name="subject">
+              <option value="Programação Web">Programação Web</option>
+              <option value="Engenharia de Requisitos">
+                Engenharia de Requisitos
+              </option>
+              <option value="Banco de Dados">Banco de Dados</option>
+              <option value="Algoritmos">Algoritmos</option>
+              <option value="Matemática">Matemática</option>
+              <option value="Outras">Outras</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="task-due">Prazo <span>*</span></label
+            ><input
+              id="task-due"
+              name="dueDate"
+              type="date"
+              aria-describedby="due-error"
+            /><small class="field-error" id="due-error"></small>
+          </div>
+        </div>
+        <div class="field">
+          <label for="task-priority">Prioridade</label
+          ><select id="task-priority" name="priority">
+            <option>Baixa</option>
+            <option selected>Média</option>
+            <option>Alta</option>
+          </select>
+        </div>
+        <div class="dialog-actions">
+          <button type="button" class="button button-quiet" id="cancel-dialog">
+            Cancelar</button
+          ><button type="submit" class="button button-primary" id="save-task">
+            Salvar tarefa
+          </button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog
+      class="confirm-dialog"
+      id="confirm-dialog"
+      aria-labelledby="confirm-title"
+    >
+      <div class="confirm-content">
+        <span class="confirm-icon" aria-hidden="true">!</span>
+        <h2 id="confirm-title">Excluir esta tarefa?</h2>
+        <p>Essa ação não pode ser desfeita.</p>
+        <div class="dialog-actions">
+          <button class="button button-quiet" id="keep-task">Cancelar</button
+          ><button class="button button-danger" id="confirm-delete">
+            Excluir tarefa
+          </button>
+        </div>
+      </div>
+    </dialog>
+    <div
+      class="toast-region"
+      id="toast-region"
+      aria-live="polite"
+      aria-atomic="true"
+    ></div>
+  </body>
+</html>
